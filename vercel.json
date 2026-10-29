@@ -1,0 +1,110 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/internal.css",
+      "destination": "/internal/styles/app.css"
+    },
+    {
+      "source": "/internal.js",
+      "destination": "/internal/scripts/app.js"
+    },
+    {
+      "source": "/internal-data.js",
+      "destination": "/internal/scripts/data.js"
+    },
+    {
+      "source": "/internal/:path*",
+      "destination": "/internal"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/internal",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow, noarchive"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "no-referrer"
+        }
+      ]
+    },
+    {
+      "source": "/internal/:path*",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow, noarchive"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "no-referrer"
+        }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/internal",
+      "permanent": false
+    },
+    {
+      "source": "/internal.html",
+      "destination": "/internal",
+      "permanent": true
+    },
+    {
+      "source": "/internal-login",
+      "destination": "/internal/login",
+      "permanent": true
+    },
+    {
+      "source": "/internal-login.html",
+      "destination": "/internal/login",
+      "permanent": true
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/cron/weekly-digest",
+      "schedule": "0 6 * * 1"
+    },
+    {
+      "path": "/api/cron/contact-notes",
+      "schedule": "0 8 * * *"
+    },
+    {
+      "path": "/api/cron/mailchimp",
+      "schedule": "30 5 * * *"
+    },
+    {
+      "path": "/api/cron/inbox-review",
+      "schedule": "15 8 * * *"
+    }
+  ],
+  "functions": {
+    "api/cron/contact-notes.js": {
+      "maxDuration": 60
+    },
+    "api/contacts-sync.js": {
+      "maxDuration": 60
+    },
+    "api/contacts-catchup.js": {
+      "maxDuration": 60
+    }
+  }
+}

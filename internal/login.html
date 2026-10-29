@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow, noarchive" />
+  <meta name="theme-color" content="#000000" />
+  <title>YourOrg — Internal access</title>
+
+  <link rel="stylesheet" href="/internal/styles/app.css">
+</head>
+<body>
+  <div class="login-wrap">
+    <div class="login-card">
+      <h1>YourOrg</h1>
+      <p class="kicker">Internal workspace</p>
+
+      <form id="login-form" autocomplete="on">
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" inputmode="email" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="you@example.org" required>
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="login-submit" id="submit">Sign in</button>
+        <button type="button" class="login-passkey" id="passkey" hidden>Sign in with Touch ID or Face ID</button>
+        <p class="login-error" id="error" role="alert"></p>
+      </form>
+    </div>
+  </div>
+
+  <script src="/internal/scripts/passkey.js"></script>
+  <script src="/internal/scripts/login.js"></script>
+</body>
+</html>

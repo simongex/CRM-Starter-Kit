@@ -1,0 +1,13 @@
+{
+  "name": "crm-starter-kit",
+  "private": true,
+  "type": "module",
+  "description": "Login-gated internal workspace: task timeline + contacts CRM (Vercel + Upstash Redis)",
+  "scripts": {
+    "dev": "python3 tools/dev-server.py",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@vercel/functions": "^3.9.7"
+  }
+}

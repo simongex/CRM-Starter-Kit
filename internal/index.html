@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow, noarchive" />
+  <meta name="theme-color" content="#000000" />
+  <title>YourOrg — Internal</title>
+
+
+  <link rel="stylesheet" href="/internal/styles/app.css">
+  <script>
+    if (localStorage.getItem('kb-theme') === 'light') document.documentElement.classList.add('theme-light');
+    window.KB_STATE_PROMISE = fetch('/api/state', { cache: 'no-store' })
+      .then(async (response) => ({
+        status: response.status,
+        body: response.ok ? await response.json() : null
+      }))
+      .catch(() => null);
+  </script>
+</head>
+<body class="view-dashboard">
+  <header class="app-header">
+    <a class="brand" href="/internal" data-action="collapse-gantt" aria-label="YourOrg home">
+      <span class="brand-name">YourOrg</span>
+    </a>
+
+    <div class="header-actions">
+      <span class="sync" id="sync" aria-live="polite"></span>
+      <a class="icon-btn" id="contacts-open" href="/internal/contacts" data-action="open-contacts" aria-label="Contacts" aria-pressed="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="9" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M3.6 19c.4-3.1 2.8-5 5.4-5s5 1.9 5.4 5" fill="none" stroke="currentColor" stroke-width="1.6"/>
+          <circle cx="17.2" cy="9" r="2.4" fill="none" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M16.2 19c.3-2.1 1.5-3.6 3.4-4.3" fill="none" stroke="currentColor" stroke-width="1.6"/>
+        </svg>
+      </a>
+      <button type="button" class="icon-btn" id="theme-toggle" data-action="toggle-theme" aria-label="Invert colours" aria-pressed="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="7.5" fill="none" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M12 4.5a7.5 7.5 0 0 1 0 15z" fill="currentColor"/>
+        </svg>
+      </button>
+      <details class="profile-menu" id="profile-menu">
+        <summary aria-label="Account menu" aria-haspopup="menu">
+          <span class="avatar" id="profile-avatar" aria-hidden="true"></span>
+          <span class="profile-label" id="profile-label">Profile</span>
+        </summary>
+        <div class="menu-panel">
+          <button type="button" data-action="open-profile">Profile</button>
+          <button type="button" data-action="logout">Log out</button>
+        </div>
+      </details>
+    </div>
+  </header>
+
+  <div id="dashboard" class="dashboard">
+    <div class="dash-top">
+      <h1 class="greeting" id="greeting">Good evening</h1>
+      <div class="local-meta" id="local-meta">
+        <div class="local-meta-date">
+          <span id="local-date"></span>
+        </div>
+        <div class="local-meta-time">
+          <time id="local-time"></time>
+        </div>
+        <div class="local-meta-place">
+          <span id="local-place">Locating…</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-cols">
+      <div class="dash-left">
+        <section class="task-panel" aria-label="Task manager">
+          <div class="task-panel-head">
+            <div class="seg" id="dash-scope" role="group" aria-label="Period"></div>
+            <div class="task-panel-actions">
+              <div class="dash-tools" data-add-tools hidden>
+                <button type="button" class="text-btn" data-action="add-dash-task">+ Add task</button>
+                <button type="button" class="text-btn" data-action="add-dash-action">+ Add action</button>
+                <button type="button" class="text-btn new-actions-btn" data-action="new-actions" data-manager-only hidden aria-expanded="false">
+                  <span class="new-actions-dot" hidden></span>
+                  New actions
+                </button>
+              </div>
+              <a class="expand-btn" href="/internal/timeline" data-action="expand-gantt">
+                Expand
+                <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+          </div>
+          <div class="seg dash-owner" id="dash-owner" role="group" aria-label="Owner"></div>
+          <div id="task-list" class="task-list"></div>
+        </section>
+      </div>
+
+      <div class="dash-right">
+        <section class="cal-panel" aria-label="Month calendar">
+          <div id="month-cal" class="month-cal"></div>
+          <div id="cal-agenda" class="cal-agenda"></div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <div class="gantt-bar" id="gantt-bar" hidden>
+    <label class="search">
+      <span class="visually-hidden">Search tasks</span>
+      <input type="search" id="search" placeholder="Search tasks" autocomplete="off">
+    </label>
+
+    <details class="filter-drop" id="owner-filter"></details>
+    <details class="filter-drop" id="year-filter"></details>
+    <div class="seg" id="scope-filter" role="group" aria-label="Period"></div>
+    <div class="seg" id="zoom-filter" role="group" aria-label="Zoom"></div>
+
+    <div class="gantt-bar-actions">
+      <details class="menu" id="gantt-menu">
+        <summary aria-label="More">···</summary>
+        <div class="menu-panel">
+          <button type="button" data-action="add-category">Add category</button>
+          <button type="button" data-action="export-pdf">Export PDF</button>
+          <button type="button" data-action="export-excel">Export Excel</button>
+          <button type="button" data-action="export">Export JSON</button>
+          <button type="button" data-action="import" data-manager-only hidden>Import JSON</button>
+          <button type="button" data-action="reset" data-manager-only hidden>Reload programme</button>
+        </div>
+      </details>
+      <button type="button" class="text-btn" data-action="add-task" data-add-tools hidden>+ Add task</button>
+    </div>
+  </div>
+
+  <main id="gantt" class="gantt" aria-label="Tasks and timeline" hidden></main>
+
+  <div id="backdrop" hidden></div>
+  <aside id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title" hidden></aside>
+
+  <main id="contacts-root" class="contacts-page" hidden aria-labelledby="contacts-title">
+    <div id="contacts-panel"></div>
+  </main>
+
+  <input type="file" id="import-file" accept="application/json,.json" hidden>
+
+  <div id="new-actions-layer" class="new-actions-layer" hidden>
+    <div class="new-actions-window" role="dialog" aria-modal="true" aria-labelledby="new-actions-title">
+      <div class="new-actions-head">
+        <h2 id="new-actions-title">New actions</h2>
+        <button type="button" class="text-btn" data-action="close-new-actions">Close</button>
+      </div>
+      <div id="new-actions-list"></div>
+    </div>
+  </div>
+
+  <div id="leave-task-layer" class="leave-task-layer" hidden>
+    <div class="leave-task-window" role="alertdialog" aria-modal="true" aria-labelledby="leave-task-title">
+      <h2 id="leave-task-title">Save changes?</h2>
+      <div class="leave-task-actions">
+        <button type="button" class="text-btn" data-action="discard-task">Discard</button>
+        <button type="button" class="save-btn" data-action="save-and-close-task">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/internal/scripts/data.js" defer></script>
+  <script src="/internal/scripts/passkey.js" defer></script>
+  <script src="/internal/scripts/app.js" defer></script>
+  <script src="/internal/scripts/contacts.js" defer></script>
+</body>
+</html>
